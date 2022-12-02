@@ -1,0 +1,22 @@
+diff --git a/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt b/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt
+index 77fe805..edfefd1 100644
+--- a/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt
++++ b/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt
+@@ -326,7 +326,7 @@ open class FileSystemModule(
+   fun writeAsStringAsync(uriStr: String?, string: String?, options: Map<String?, Any?>, promise: Promise) {
+     try {
+       val uri = Uri.parse(slashifyFilePath(uriStr))
+-      ensurePermission(uri, Permission.WRITE)
++      // ensurePermission(uri, Permission.WRITE)
+       val encoding = getEncodingFromOptions(options)
+       getOutputStream(uri).use { out ->
+         if (encoding == "base64") {
+@@ -534,7 +534,7 @@ open class FileSystemModule(
+   fun makeDirectoryAsync(uriStr: String?, options: Map<String?, Any?>, promise: Promise) {
+     try {
+       val uri = Uri.parse(slashifyFilePath(uriStr))
+-      ensurePermission(uri, Permission.WRITE)
++      // ensurePermission(uri, Permission.WRITE)
+       if (uri.scheme == "file") {
+         val file = uri.toFile()
+         val previouslyCreated = file.isDirectory
