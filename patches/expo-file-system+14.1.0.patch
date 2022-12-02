@@ -1,17 +1,36 @@
 diff --git a/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt b/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt
-index 77fe805..edfefd1 100644
+index 77fe805..be1c267 100644
 --- a/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt
 +++ b/node_modules/expo-file-system/android/src/main/java/expo/modules/filesystem/FileSystemModule.kt
-@@ -326,7 +326,7 @@ open class FileSystemModule(
+@@ -326,9 +326,10 @@ open class FileSystemModule(
    fun writeAsStringAsync(uriStr: String?, string: String?, options: Map<String?, Any?>, promise: Promise) {
      try {
        val uri = Uri.parse(slashifyFilePath(uriStr))
 -      ensurePermission(uri, Permission.WRITE)
 +      // ensurePermission(uri, Permission.WRITE)
        val encoding = getEncodingFromOptions(options)
-       getOutputStream(uri).use { out ->
+-      getOutputStream(uri).use { out ->
++      val append = getAppend(options);
++      getOutputStream(uri, append).use { out ->
          if (encoding == "base64") {
-@@ -534,7 +534,7 @@ open class FileSystemModule(
+           val bytes = Base64.decode(string, Base64.DEFAULT)
+           out.write(bytes)
+@@ -343,6 +344,14 @@ open class FileSystemModule(
+     }
+   }
+ 
++  private fun getAppend(options: Map<String?, Any?>): Boolean {
++    return if (options.containsKey("append") && options["append"] is Boolean) {
++      options["append"] as Boolean
++    } else {
++     false
++    }
++  }
++
+   @ExpoMethod
+   fun deleteAsync(uriStr: String?, options: Map<String?, Any?>, promise: Promise) {
+     try {
+@@ -534,7 +543,7 @@ open class FileSystemModule(
    fun makeDirectoryAsync(uriStr: String?, options: Map<String?, Any?>, promise: Promise) {
      try {
        val uri = Uri.parse(slashifyFilePath(uriStr))
@@ -20,3 +39,14 @@ index 77fe805..edfefd1 100644
        if (uri.scheme == "file") {
          val file = uri.toFile()
          val previouslyCreated = file.isDirectory
+@@ -1260,8 +1269,8 @@ open class FileSystemModule(
+   }
+ 
+   @Throws(IOException::class)
+-  private fun getOutputStream(uri: Uri) = when {
+-    uri.scheme == "file" -> FileOutputStream(uri.toFile())
++  private fun getOutputStream(uri: Uri, append: Boolean) = when {
++    uri.scheme == "file" -> FileOutputStream(uri.toFile(), append)
+     uri.isSAFUri -> context.contentResolver.openOutputStream(uri)!!
+     else -> throw IOException("Unsupported scheme for location '$uri'.")
+   }
