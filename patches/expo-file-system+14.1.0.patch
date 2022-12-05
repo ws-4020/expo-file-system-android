@@ -50,3 +50,27 @@ index 77fe805..be1c267 100644
      uri.isSAFUri -> context.contentResolver.openOutputStream(uri)!!
      else -> throw IOException("Unsupported scheme for location '$uri'.")
    }
+diff --git a/node_modules/expo-file-system/build/FileSystem.types.d.ts b/node_modules/expo-file-system/build/FileSystem.types.d.ts
+index f0831c0..08d502b 100644
+--- a/node_modules/expo-file-system/build/FileSystem.types.d.ts
++++ b/node_modules/expo-file-system/build/FileSystem.types.d.ts
+@@ -86,6 +86,7 @@ export declare type ReadingOptions = {
+ };
+ export declare type WritingOptions = {
+     encoding?: EncodingType | 'utf8' | 'base64';
++    append?: boolean;
+ };
+ export declare type ProgressEvent<T> = {
+     uuid: string;
+diff --git a/node_modules/expo-file-system/src/FileSystem.types.ts b/node_modules/expo-file-system/src/FileSystem.types.ts
+index 0585c0c..ac125ee 100644
+--- a/node_modules/expo-file-system/src/FileSystem.types.ts
++++ b/node_modules/expo-file-system/src/FileSystem.types.ts
+@@ -122,6 +122,7 @@ export type ReadingOptions = {
+ 
+ export type WritingOptions = {
+   encoding?: EncodingType | 'utf8' | 'base64';
++  append?: boolean;
+ };
+ 
+ export type ProgressEvent<T> = {
